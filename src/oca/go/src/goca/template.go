@@ -120,9 +120,14 @@ func (tc *TemplatesController) Create(template string) (int, error) {
 // * tpl: The new template contents. Syntax can be the usual attribute=value or XML.
 // * uType: Update type: Replace: Replace the whole template.
 //   Merge: Merge new template with the existing one.
-func (tc *TemplateController) Update(tpl string, uType parameters.UpdateType) error {
-	_, err := tc.c.Client.Call("one.template.update", tc.ID, tpl, uType)
-	return err
+func (tc *TemplateController) Update(tpl string, uType parameters.UpdateType) (int, error) {
+	response, err := tc.c.Client.Call("one.template.update", tc.ID, tpl, uType)
+
+	if err != nil {
+		return -1, err
+	}
+
+	return response.BodyInt(), nil
 }
 
 // Chown changes the owner/group of a template. If uid or gid is -1 it will not
